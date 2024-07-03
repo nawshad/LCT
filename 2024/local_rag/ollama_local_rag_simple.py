@@ -30,9 +30,10 @@ llm = ChatOllama(model=local_llm,
                  temperature=0)
 
 # Create prompt template
-template = """<bos><start_of_turn>user\nAnswer the question based only on the following context and extract out a meaningful answer. \
+template = """<bos><start_of_turn>user\nAnswer the question based only on the following context and extract out a meaningful answer in 10 words. \
 Please write in full sentences with correct spelling and punctuation. if it makes sense use lists. \
-If the context doesn't contain the answer, just respond that you are unable to find an answer. Always provide the answer with document location.\
+If the context doesn't contain the answer, just respond that you are unable to find an answer. Always provide the answer with document location and the starting and 
+ending index of the answer from those documents.\
 
 CONTEXT: {context}
 
