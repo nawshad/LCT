@@ -1,14 +1,13 @@
 
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
+from paths import *
 
 # Load documents from a directory
-loader = DirectoryLoader("./hormozi_transcripts", glob="**/*.txt")
+loader = DirectoryLoader(DATA_ROOT + "Wiki-texts/Cranmer/", glob="**/*.txt")
 
 print("dir loaded loader")
 
@@ -16,7 +15,7 @@ documents = loader.load()
 
 print(len(documents))
 
-# # Create embeddingsclear
+# # Create embeddings clear
 embeddings = OllamaEmbeddings(model="nomic-embed-text", show_progress=True)
 
 # # Create Semantic Text Splitter
@@ -35,6 +34,6 @@ texts = text_splitter.split_documents(documents)
 vectorstore = Chroma.from_documents(
     documents=texts, 
     embedding= embeddings,
-    persist_directory="./db-hormozi")
+    persist_directory="./db-wiki-cranmer")
 
 print("vectorstore created")

@@ -12,7 +12,7 @@ from langchain.schema.output_parser import StrOutputParser
 # # Create embeddingsclear
 embeddings = OllamaEmbeddings(model="nomic-embed-text", show_progress=False)
 
-db = Chroma(persist_directory="./db-hormozi",
+db = Chroma(persist_directory="./db-wiki-cranmer",
             embedding_function=embeddings)
 
 # # Create retriever
@@ -22,7 +22,7 @@ retriever = db.as_retriever(
 )
 
 # # Create Ollama language model - Gemma 2
-local_llm = 'gemma2'
+local_llm = 'mistral'
 
 llm = ChatOllama(model=local_llm,
                  keep_alive="3h", 
@@ -32,7 +32,7 @@ llm = ChatOllama(model=local_llm,
 # Create prompt template
 template = """<bos><start_of_turn>user\nAnswer the question based only on the following context and extract out a meaningful answer. \
 Please write in full sentences with correct spelling and punctuation. if it makes sense use lists. \
-If the context doen't contain the answer, just respond that you are unable to find an answer. \
+If the context doesn't contain the answer, just respond that you are unable to find an answer. Always provide the answer with document location.\
 
 CONTEXT: {context}
 
@@ -50,12 +50,14 @@ rag_chain = (
     | llm
 )
 
+
 # Function to ask questions
 def ask_question(question):
     print("Answer:\n\n", end=" ", flush=True)
     for chunk in rag_chain.stream(question):
         print(chunk.content, end="", flush=True)
     print("\n")
+
 
 # Example usage
 if __name__ == "__main__":
